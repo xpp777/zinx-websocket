@@ -17,7 +17,8 @@ var (
 			return true
 		},
 	}
-	cfg configs.WebSocketConfig
+	cfg      configs.WebSocketConfig
+	GWServer iserverface.IServer
 )
 
 type Server struct {
@@ -32,17 +33,15 @@ type Server struct {
 	packet     iserverface.Packet
 }
 
-var (
-	GWServer iserverface.IServer
-)
-
 func NewServer(Cfg configs.WebSocketConfig) iserverface.IServer {
 	cfg = Cfg
-	return &Server{
+	s := &Server{
 		ConnMgr:    NewConnManager(),
 		MsgHandler: NewMsgHandle(),
 		packet:     NewPack(),
 	}
+	GWServer = s
+	return s
 }
 
 func (s *Server) Start(c *gin.Context) {
